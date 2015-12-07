@@ -97,4 +97,4 @@ gulp.task('build', function (){
 
 gulp.task('default', ['watch', 'buildLESS']);
 
-gulp.task('production', ['replaceHTML', 'build']);
+gulp.task('production', ['buildLESS', 'replaceHTML', 'build']);
