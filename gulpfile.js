@@ -6,12 +6,16 @@ var browserify = require('browserify');
 var watchify = require('watchify');
 var babelify = require('babelify');
 var streamify = require('gulp-streamify');
+var less = require('gulp-less');
+
 var browserSync = require('browser-sync').create();
 
 var paths = {
   HTML: 'src/index.html',
+  ASSET_SRC: 'less/',
   MINIFIED_OUT: 'build.min.js',
   OUT: 'build.js',
+  ASSET_OUT: 'dist/assets/',
   DEST: 'dist',
   DEST_BUILD: 'dist/build/',
   DEST_SRC: 'dist/src/',
@@ -33,6 +37,14 @@ function bundle(bundler){
     .pipe(browserSync.stream());
 };
 
+gulp.task('buildLESS', function (){
+  return gulp.src(paths.ASSET_SRC + '/style.less')
+    .pipe(less({
+      paths: [paths.ASSET_SRC, paths.ASSET_OUT]
+    }))
+    .pipe(gulp.dest(paths.ASSET_OUT))
+});
+
 gulp.task('replaceHTMLsrc', function (){
   gulp.src(paths.HTML)
     .pipe(htmlreplace({
@@ -43,6 +55,7 @@ gulp.task('replaceHTMLsrc', function (){
 
 gulp.task('watch', ['replaceHTMLsrc'], function (){
   gulp.watch(paths.HTML, ['replaceHTMLsrc']);
+  gulp.watch(paths.ASSET_SRC + '*.less', ['buildLESS']);
 
   var watcher = watchify(browserify({
     entries: [paths.ENTRY_POINT],
@@ -82,6 +95,6 @@ gulp.task('build', function (){
     .pipe(gulp.dest(paths.DEST_BUILD));
 });
 
-gulp.task('default', ['watch']);
+gulp.task('default', ['watch', 'buildLESS']);
 
 gulp.task('production', ['replaceHTML', 'build']);

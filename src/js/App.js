@@ -1,7 +1,6 @@
 import React from 'react';
 import {render} from 'react-dom';
 import {Router, Route, Link, IndexRoute} from 'react-router';
-// import {createHistory, useBasename} from 'history';
 import Home from './pages/Home';
 import CSS from './pages/CSS';
 import Grid from './pages/Grid';
@@ -60,8 +59,6 @@ class App extends React.Component{
     )
   }
 }
-
-// const history = createHistory();
 
 render(
   <Router>
