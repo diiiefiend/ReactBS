@@ -53,7 +53,7 @@ class App extends React.Component{
         </div>
         <div className="navbar navbar-default">
           <div className="container-fluid">
-            <p className="navbar-text">Created by Ariel as a React-Bootstrap clone</p>
+            <p className="navbar-text">Created by Ariel as React-ified Bootstrap</p>
           </div>
         </div>
       </div>

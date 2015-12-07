@@ -6,6 +6,7 @@ var browserify = require('browserify');
 var watchify = require('watchify');
 var babelify = require('babelify');
 var streamify = require('gulp-streamify');
+var browserSync = require('browser-sync').create();
 
 var paths = {
   HTML: 'src/index.html',
@@ -18,6 +19,19 @@ var paths = {
 };
 
 var babel_presets = ['es2015', 'react'];
+
+function bundle(bundler){
+  return bundler
+    .transform(babelify, {presets: babel_presets})
+    .bundle()
+    .on('error', function (err){
+      console.log(err.message);
+      this.end();
+    })
+    .pipe(source(paths.OUT))
+    .pipe(gulp.dest(paths.DEST_SRC))
+    .pipe(browserSync.stream());
+};
 
 gulp.task('replaceHTMLsrc', function (){
   gulp.src(paths.HTML)
@@ -36,20 +50,25 @@ gulp.task('watch', ['replaceHTMLsrc'], function (){
     cache: {}, packageCache: {}, fullPaths: true
   }));
 
-  return watcher.on('update', function (){
-    watcher.transform(babelify, {presets: babel_presets})
-      .bundle()
-      .pipe(source(paths.OUT))
-      .pipe(gulp.dest(paths.DEST_SRC))
-      console.log('Updated');
-  })
-    .transform(babelify, {presets: babel_presets})
-    .bundle().on('error', function (err){
-      console.log(err.message);
-      this.end();
-    })
-    .pipe(source(paths.OUT))
-    .pipe(gulp.dest(paths.DEST_SRC));
+  watcher.on('update', function (){
+    bundle(watcher);
+    console.log('Updated');
+  });
+
+  bundle(watcher);
+
+  browserSync.init({
+    server: './dist',
+    logFileChanges: false
+  });
+});
+
+gulp.task('replaceHTML', function (){
+  gulp.src(paths.HTML)
+    .pipe(htmlreplace({
+      'js': 'build/' + paths.MINIFIED_OUT
+    }))
+    .pipe(gulp.dest(paths.DEST));
 });
 
 gulp.task('build', function (){
@@ -61,14 +80,6 @@ gulp.task('build', function (){
     .pipe(source(paths.MINIFIED_OUT))
     .pipe(streamify(uglify()))
     .pipe(gulp.dest(paths.DEST_BUILD));
-});
-
-gulp.task('replaceHTML', function (){
-  gulp.src(paths.HTML)
-    .pipe(htmlreplace({
-      'js': 'build/' + paths.MINIFIED_OUT
-    }))
-    .pipe(gulp.dest(paths.DEST));
 });
 
 gulp.task('default', ['watch']);

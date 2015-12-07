@@ -8,6 +8,10 @@
   content: "";
 }
 
+nav{
+  opacity: 0.95;
+}
+
 nav li a{
   width: 100px;
 }
@@ -28,8 +32,11 @@ nav .active{
 .bg-fill{
   background: #eee;
   border: 1px solid #ddd;
-  border-radius: 5px;
   padding: 10px;
+}
+
+.spacers *{
+  margin: 0 5px;
 }
 
 h2{
