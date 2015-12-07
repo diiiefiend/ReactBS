@@ -1,0 +1,37 @@
+.main{
+  padding: 50px 0;
+}
+
+.clearfix:after{
+  display: block;
+  clear: both;
+  content: "";
+}
+
+nav li a{
+  width: 100px;
+}
+
+nav .active{
+  border-bottom: 5px solid #79D3FB;
+  font-weight: bold;
+  transition: font-weight 0.5s;
+}
+
+.code-example{
+  border: 1px solid #eee;
+  background: #fff;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.bg-fill{
+  background: #eee;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+h2{
+  font-weight: 300;
+}
